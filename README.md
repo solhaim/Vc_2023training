@@ -136,7 +136,7 @@ To determine the serotype we will check the reports obtained with ariba and vfdb
 > We assume that an Inaba phenotype would be conferred on isolates in which ariba was unable to detect or assemble *wbeT* in its
 totality, and if a mutation in *wbeT* was detected that was predicted to frameshift or truncate translated wbeT (N62fs, N165fs, F244fs, Q274trunc), was associated with Inaba phenotypes (I206K), or was otherwise known to confer an Inaba phenotype (S158P). [(Dorman et al 2020 PMID: 33004800)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7530988/)
 
-To determine the serogroup being in the "assemblies" folder, type:
+To determine the serogroup, being in the "assemblies" folder, type:
 
 ```
 mkdir serogroup/
@@ -154,6 +154,11 @@ blastn -query T_VC4.fasta -db serogroup_db/serogroup_db -out T_VC4_blast_O.txt -
 
 ### Bonus! <!-- omit in toc -->
 
+We would like to determine the *ctxB* variant, for that we will use ariba with a custome database. Being in the trimmed folder, type:
+
+```
+for f in *_R1.fastq.gz; do ariba run --threads 4 /home/sh12/Analisis/VC/AnalisisVC/ctxB_out_prepareref/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.ctx.out.dir; done 
+```
 
 
 
