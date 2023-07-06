@@ -9,7 +9,7 @@ Here you'll find all the commands necessary to solve the *Vibrio cholerae* comma
 5) Determine Vc lineage and sublineage
 
 ```
-Each one of you will be working in a user of ther server named "alu0X", so whenever you find "alu0X" in a command, change it to the correct name of the user you'll be working with.
+Each one of you will be working in a user of the server named "alu0X", so whenever you find "alu0X" in a command, change it to the correct name of the user you'll be working with.
 ```
 ## Exercise <!-- omit in toc -->
 ### Quality control
