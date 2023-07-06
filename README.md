@@ -1,1 +1,1 @@
-# Vc_2023training
+# Vc_2023training <!-- omit in toc -->
