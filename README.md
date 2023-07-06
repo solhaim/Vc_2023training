@@ -77,6 +77,69 @@ for f in *_R1.fastq.gz; do kraken2 -db /mnt/Netapp/KRKDB/KRKDB_st8 --threads 8 -
 
 ### Assembly
 
+We now want to obtain de novo assemblies for our genomes. As this process is computationally demanding, we will do it for only one of the samples. Being in the "trimmed" directory, type: 
+
+```
+unicycler -1 T_VC4_R1.fastq.gz -2 T_VC4_R2.fastq.gz -o assemblies/T_VC4_uni.out --verbosity 2 -t 8
+```
+
+Once it is over, type:
+
+```
+cd assemblies
+
+for f in *.out/assembly.fasta; do cp $f ${f%_uni.out/assembly.fasta}.fasta; done
+```
+
+Let's check the quality of our newly obtained assembly, being in the assembly folder type:
+
+```
+quast.py -t 4 MUESTRA.fasta
+```
+
+### Annotation
+
+We will annotate, the de novo assembly we created previously. Being in the "assembly" folder, type:
+
+```
+prokka --prefix T_VC4 --outdir prokka/T_VC4.annotation --addgenes --mincontiglen 300 --cpus 4 T_VC4.fasta
+```
+
+To explore the files produced, enter 'cd' the "prokka" folder.
+
+### Looking for AMR and virulence determinants
+
+There are lots of softwares for this purpose but we will be using ariba (with resfinder and vfdb databases) and AMRFinderPlus. To start, being in the "trimmed" folder, type:
+
+```
+mkdir ariba
+
+for f in *_R1.fastq.gz; do ariba run --threads 6 /home/inei/secuencias/prepareref/resfinder_db.out/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.res.out.dir; done
+
+for f in *_R1.fastq.gz; do ariba run --threads 6 /home/inei/secuencias/prepareref/vfdb_core_db.out/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.vfdb.out.dir; done
+
+ariba summary ariba/out_res ariba/*res.out.dir/report.tsv
+ariba summary ariba/out_vfdb ariba/*vfdb.out.dir/report.tsv
+```
+
+AMRFinderPlus requires as input a fasta file, so we will try this software using the de novo assembly from T_VC4. Being in the "trimmed" folder, type:
+
+```
+amrfinder -O Vibrio_cholerae --plus -n assemblies/T_VC4.fasta -o T_VC4_amrfinderplus.tsv
+```
+
+### Determining serogroup and serotype
+
+To determine the serotype we will check the reports obtained with ariba and vfdb database:
+
+> We assume that an Inaba phenotype would be conferred on isolates in which ariba was unable to detect or assemble *wbeT* in its
+totality, and if a mutation in *wbeT* was detected that was predicted to frameshift or truncate translated wbeT (N62fs, N165fs, F244fs, Q274trunc), was associated with Inaba phenotypes (I206K), or was otherwise known to confer an Inaba phenotype (S158P). [(Dorman et al 2020 PMID: 33004800)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7530988/)
+
+
+
+
+
+
 
 
 
