@@ -31,4 +31,17 @@ You can see you have different fastq files. We are interested in checking the qu
 mkdir fastqc_raw
 
 fastqc -t 8 -o fastqc_raw *.fastq.gz
+
+mkdir kraken2
+
+for f in *_1.fastq.gz; do kraken2 -db /mnt/Netapp/KRKDB/KRKDB_st8 --threads 8 --gzip-compressed --paired --report kraken2/${f%_1.fastq.gz}_kraken2.txt --use-names $f ${f%_1.fastq.gz}_2.fastq.gz; done
 ```
+
+To see the results of these commands `cd` to the different folders you've created previously. 
+
+> **Remember**: once you've enter a new directory, you can go to the previous one by typing: `cd ..`
+
+Now, we want to trim our fastq file by quality, so type:
+
+
+
