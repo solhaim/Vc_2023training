@@ -99,7 +99,7 @@ quast.py -t 4 MUESTRA.fasta
 
 ### Annotation
 
-We will annotate, the de novo assembly we created previously. Being in the "assembly" folder, type:
+We will annotate, the de novo assembly we created previously. Being in the "assemblies" folder, type:
 
 ```
 prokka --prefix T_VC4 --outdir prokka/T_VC4.annotation --addgenes --mincontiglen 300 --cpus 4 T_VC4.fasta
@@ -119,6 +119,7 @@ for f in *_R1.fastq.gz; do ariba run --threads 6 /home/inei/secuencias/preparere
 for f in *_R1.fastq.gz; do ariba run --threads 6 /home/inei/secuencias/prepareref/vfdb_core_db.out/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.vfdb.out.dir; done
 
 ariba summary ariba/out_res ariba/*res.out.dir/report.tsv
+
 ariba summary ariba/out_vfdb ariba/*vfdb.out.dir/report.tsv
 ```
 
@@ -135,6 +136,23 @@ To determine the serotype we will check the reports obtained with ariba and vfdb
 > We assume that an Inaba phenotype would be conferred on isolates in which ariba was unable to detect or assemble *wbeT* in its
 totality, and if a mutation in *wbeT* was detected that was predicted to frameshift or truncate translated wbeT (N62fs, N165fs, F244fs, Q274trunc), was associated with Inaba phenotypes (I206K), or was otherwise known to confer an Inaba phenotype (S158P). [(Dorman et al 2020 PMID: 33004800)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7530988/)
 
+To determine the serogroup being in the "assemblies" folder, type:
+
+```
+mkdir serogroup/
+
+cd serogroup/
+
+cp /home/sh12/Analisis/VC/AnalisisVC/serogroupDB/DB_Vc_Oserogroup.fasta .
+
+makeblastdb -in DB_Vc_Oserogroup.fasta -dbtype nucl -out serogroup_db
+
+cd ..
+
+blastn -query T_VC4.fasta -db serogroup_db/serogroup_db -out T_VC4_blast_O.txt -outfmt 6 -max_target_seqs 3
+```
+
+### Bonus!<!-- omit in toc -->
 
 
 
