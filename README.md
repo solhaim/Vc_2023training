@@ -156,7 +156,7 @@ We would like to determine the *ctxB* variant, for that we will use ariba with a
 for f in *_R1.fastq.gz; do ariba run --threads 4 /home/sh12/Analisis/VC/AnalisisVC/ctxB_out_prepareref/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.ctx.out.dir; done 
 ```
 
-### Determining the lineage of a Vibrio cholerae genome
+### Determining the lineage of a *Vibrio cholerae* genome
 
 We will use a small collection of annotated genomes in order to build a phylogenetic tree from core genome SNPs. You can find the metadata here: [https://docs.google.com/spreadsheets/d/1nyGB5RA3eu7xlJ_BBXrF5trsQyJmqKetKuBfPbN4WvE/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1nyGB5RA3eu7xlJ_BBXrF5trsQyJmqKetKuBfPbN4WvE/edit?usp=sharing)
 
@@ -178,5 +178,45 @@ For building up the tree we will use [IQ-TREE](https://github.com/iqtree/iqtree2
 iqtree -s core_gene_alignment_snps.aln -m TEST -pre vc_roary -bb 1000 -nt 12
 ```
 
+### Determining the sublineage of a *Vibrio cholerae* 7PET genome
 
+For determining the sublineage we will build up a tree from the SNPs obtained from the mapping of the reads against a 7PET reference genome (N16961). We will use [snippy](https://github.com/tseemann/snippy) to do the reference mapping. Being in the "Vc_training2023", type:
+
+```
+snippy --cpus 4 --outdir snippy_dataset/T_VC4_snippy --ref N16961.fna --R1 trimmed/T_VC4_R1.fastq.gz --R2 trimmed/T_VC4_R2.fastq.gz
+```
+
+> Repeat this command for every 7PET genome.
+
+Now lets use 'snippy-core' to summarise all these genomes and create a multiple sequence alignment. Type: 
+
+```
+cd snippy
+snippy-core --ref ../N16961.fna *_snippy
+```
+
+As we want everything masked in the same way, let’s change that so anything uncertain is marked as ’N’ using the 'snippy-clean_full_aln' script that comes with 'snippy'. Type:
+
+```
+snippy-clean_full_aln core.full.aln > clean.full.aln
+```
+
+We can use [gubbins](https://github.com/nickjcroucher/gubbins) to infer recombining sites by looking for increased SNP density that occurs in specific ancestral nodes. Type:
+
+```
+conda activate
+run_gubbins.py --threads 10 -p gubbins clean.full.aln
+conda deactivate
+```
+Again, to remove all the invariant sites and create a SNP-only multiple sequence alignment we will use [snp-sites](https://github.com/sanger-pathogens/snp-sites). Type: 
+
+```
+snp-sites -c gubbins.filtered_polymorphic_sites.fasta -o clean.core.aln
+```
+
+Now, let's build our tree. Type: 
+
+```
+iqtree -s clean.core.aln -m TEST -pre vc_snippy -bb 1000 -nt 12
+```
 
