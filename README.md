@@ -90,7 +90,7 @@ for f in *.out/assembly.fasta; do cp $f ${f%_uni.out/assembly.fasta}.fasta; done
 Let's check the quality of our newly obtained assembly, being in the assembly folder type:
 
 ```
-quast.py -t 4 MUESTRA.fasta
+quast.py -t 4 T_VC4.fasta
 ```
 
 ### Annotation
