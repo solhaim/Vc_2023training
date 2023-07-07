@@ -156,10 +156,27 @@ We would like to determine the *ctxB* variant, for that we will use ariba with a
 for f in *_R1.fastq.gz; do ariba run --threads 4 /home/sh12/Analisis/VC/AnalisisVC/ctxB_out_prepareref/ $f ${f%_R1.fastq.gz}_R2.fastq.gz ariba/${f%_R1.fastq.gz}.ctx.out.dir; done 
 ```
 
+### Determining the lineage of a Vibrio cholerae genome
 
+We will use a small collection of annotated genomes in order to build a phylogenetic tree from core genome SNPs. You can find the metadata here: [https://docs.google.com/spreadsheets/d/1nyGB5RA3eu7xlJ_BBXrF5trsQyJmqKetKuBfPbN4WvE/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1nyGB5RA3eu7xlJ_BBXrF5trsQyJmqKetKuBfPbN4WvE/edit?usp=sharing)
 
+To obtain the core genome alignment we will use [Roary](https://github.com/sanger-pathogens/Roary). Being in the "Vc_training2023" folder, type: 
 
+```
+roary -e --mafft -f roary070723 -p 12 roary_dataset/*.gff
+```
 
+Now, we want to keep the variant sites from the alignment, for that we will use [snp-sites](https://github.com/sanger-pathogens/snp-sites). Being in the "Vc_training2023" folder, type:
+
+```
+snp-sites -o roary070723/core_gene_alignment_snps.aln roary070723/core_gene_alignment.aln
+```
+
+For building up the tree we will use [IQ-TREE](https://github.com/iqtree/iqtree2) which is an efficient and versatile phylogenomic software by maximum likelihood. Being in "roary070723" folder, type:
+
+```
+iqtree -s core_gene_alignment_snps.aln -m TEST -pre vc_roary -bb 1000 -nt 12
+```
 
 
 
