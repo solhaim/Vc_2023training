@@ -145,7 +145,7 @@ makeblastdb -in DB_Vc_Oserogroup.fasta -dbtype nucl -out serogroup_db
 
 cd ..
 
-blastn -query T_VC4.fasta -db serogroup_db/serogroup_db -out T_VC4_blast_O.txt -outfmt 6 -max_target_seqs 3
+blastn -query T_VC4.fasta -db serogroup/serogroup_db -out T_VC4_blast_O.txt -outfmt 6 -max_target_seqs 3
 ```
 
 ### Bonus! <!-- omit in toc -->
