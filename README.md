@@ -180,7 +180,9 @@ iqtree -s core_gene_alignment_snps.aln -m TEST -pre vc_roary -bb 1000 -nt 12
 
 ### Determining the sublineage of a *Vibrio cholerae* 7PET genome
 
-For determining the sublineage we will build up a tree from the SNPs obtained from the mapping of the reads against a 7PET reference genome (N16961). We will use [snippy](https://github.com/tseemann/snippy) to do the reference mapping. Being in the "Vc_training2023", type:
+For determining the sublineage we will build up a tree from the SNPs obtained from the mapping of the reads against a 7PET reference genome (N16961). We will use [snippy](https://github.com/tseemann/snippy) to do the reference mapping. The metadata of the context dataset used in this task is in: [https://docs.google.com/spreadsheets/d/17j9f_cYUxsbDTbTWhxfRB1oPt_aXP1GjwrnmjtDdecA/edit#gid=0](https://docs.google.com/spreadsheets/d/17j9f_cYUxsbDTbTWhxfRB1oPt_aXP1GjwrnmjtDdecA/edit#gid=0)
+
+Being in the "Vc_training2023", type:
 
 ```
 snippy --cpus 4 --outdir snippy_dataset/T_VC4_snippy --ref N16961.fna --R1 trimmed/T_VC4_R1.fastq.gz --R2 trimmed/T_VC4_R2.fastq.gz
@@ -191,7 +193,7 @@ snippy --cpus 4 --outdir snippy_dataset/T_VC4_snippy --ref N16961.fna --R1 trimm
 Now lets use 'snippy-core' to summarise all these genomes and create a multiple sequence alignment. Type: 
 
 ```
-cd snippy
+cd snippy_dataset
 snippy-core --ref ../N16961.fna *_snippy
 ```
 
